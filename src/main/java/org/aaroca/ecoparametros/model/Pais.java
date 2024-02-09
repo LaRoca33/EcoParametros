@@ -1,4 +1,4 @@
-package org.inigojimenez.practicaformulariorepintado.model;
+package org.aaroca.ecoparametros.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,5 +11,5 @@ public class Pais {
     private String idioma;
     private String prefijotelefonicoPais;
     private Boolean muestraIdioma;
-    private String nombreArchivoBandera;
+
 }

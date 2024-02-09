@@ -1,10 +1,197 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<form th:fragment="formulario" id="f1" action="recibeParametros" method="post" th:object="${formulario}">
+             <div th:if="${errores}">
+                    <h3 class="error" th:text="#{aviso_errores}"></h3>
+             </div>
+             <div th:unless="${errores}">
+                    <h3 class="allegri" th:text="#{aviso_sinErrores}"></h3>
+             </div>
+             <div th:if="${#fields.hasErrors('global')}">
+                    <h3 th:text="#{aviso_erroresGlobales}"></h3>
+                    <p th:each="error : ${#fields.errors('global')}" th:text="${error}" class="error" />
+             </div>
+    <fieldset>
+        <legend th:text="#{datosDeUsuario}"></legend>
+            <label for="iteracionesID">Iteraciones:</label>
+                <input type="hidden" name="iteraciones" id="iteracionesID" value="1"/>
+        <br>
+            <label class="requiere" for="nombre" th:text="#{etiqueta_nombre}"></label>
+                <input tabindex="1" type="text" th:field="*{nombre}" placeholder="Escribe tu nombre"/>
+                    <div th:errors="*{nombre}" class="error"></div>
+        <br>
+            <label class="requiere" for="clave" th:text="#{etiqueta_clave}"></label>
+                <input tabindex="2" type="password" th:field="*{clave}" placeholder="Escribe tu contraseña">
+                    <div th:errors="*{clave}" class="error"></div>
+        <br>
+            <label class="requiere" for="confirmarClave" th:text="#{etiqueta_confirmar_clave}"></label>
+                <input tabindex="3" type="password" th:field="*{confirmarClave}" placeholder="Confirma tu contraseña">
+                    <div th:errors="*{confirmarClave}" class="error"></div>
+        <br>
+                <input type="button" value="Ver/Ocultar" onclick="
+                    let claveInput = document.getElementById('clave');
+                    let confirmarClaveInput = document.getElementById('confirmarClave');
+                    if (claveInput.type === 'password') {
+                        claveInput.type = 'text';
+                        confirmarClaveInput.type = 'text';
+                    } else {
+                        claveInput.type = 'password';
+                        confirmarClaveInput.type = 'password';
+                }">
+    </fieldset>
+<br>
+    <fieldset>
+        <legend  th:text="#{datosPersonales}"></legend>
+            <span class="requiere" tabindex="4" th:text="#{etiqueta_genero}"></span>
+                <label th:each="genero: ${generoSel}">
+                    <th:block th:text="${genero.value}"/>
+                    <input type="radio"
+                        th:value="${genero.key}"
+                        th:field="*{generoSeleccionado}"/>
+                </label>
+
+            <!--<label for="generoSeleccionadoID">Mujer</label>
+                <input type="radio" name="genero" id="generoSeleccionadoID" value="M">
+            <label for="generoSeleccionadoID2">Hombre</label>
+                <input type="radio" name="genero" id="generoSeleccionadoID2" value="H">
+            <label for="generoSeleccionadoID3">Otro</label>
+                <input type="radio" name="genero" id="generoSeleccionadoID3" value="O">-->
+
+                 <input type="button" value="Desseleccionar" onclick="
+                    let generoRadio = document.getElementsByName('generoSeleccionado');
+                        for (let i = 0; i < generoRadio.length; i++) {
+                            generoRadio[i].checked = false;
+                        }">
+                <div th:errors="*{generoSeleccionado}" class="error"></div>
+        <br>
+            <label class="requiere" for="fechaNacimiento" th:text="#{etiqueta_fechaNac}"></label>
+                <input tabindex="5" type="text" th:field="*{fechaNacimiento}" placeholder="Formato dd/mm/aaaa">
+                    <div th:errors="*{fechaNacimiento}" class="error"></div>
+        <br>
+            <label class="especial" for="edad" th:text="#{etiqueta_edad}"></label>
+                <input tabindex="6" type="text" th:field="*{edad}" placeholder="Introduce tu edad">
+                    <div th:errors="*{edad}" class="error"></div>
+        <br>
+            <label class="requiere" for="paisSel" th:text="#{etiqueta_paisSel}"></label>
+                <select tabindex="7" th:field="*{paisSel}">
+                    <option th:each="pais: ${listaPaises}" th:text="${pais.value.getPais()}" th:value="${pais.key}">
+                    </option>
+                </select>
+                    <div th:errors="*{paisSel}" class="error"></div>
+                <!--<select tabindex="7" id="paisID">
+                    <option name="Portugal" value="pt">Portugal</option>
+                    <option name="España" value="es">España</option>
+                    <option name="Francia" value="fr" selected="selected">Francia</option>
+                    <option name="Andorra" value="an">Andorra</option>
+                </select>-->
+        <br>
+    </fieldset>
+<br>
+    <fieldset>
+        <legend th:text="#{datosDeContacto}"></legend>
+            <label class="especial" for="prefijoTel" th:text="#{etiqueta_prefijoTel}"></label>
+                <select tabindex="8" th:field="*{prefijoTel}">
+                    <option th:each="pais: ${listaPaises}" th:text="${pais.value.getPrefijotelefonicoPais()}" th:value="${pais.value.getPrefijotelefonicoPais()}"
+                    th:selected="${pais.value.getPrefijotelefonicoPais()} == *{prefijoTel}"></option>
+
+                </select>
+                    <div th:errors="*{prefijoTel}" class="error"></div>
+        <br>
+            <label class="especial" for="tel" th:text="#{etiqueta_tel}"></label>
+                <input tabindex="9" type="text" th:field="*{tel}" placeholder="Introduce tu teléfono">
+                    <div th:errors="*{tel}" class="error"></div>
+        <br>
+            <label class="especial" for="email" th:text="#{etiqueta_email}"></label>
+                <input tabindex="10" type="text" th:field="*{email}" placeholder="Introduzca un email de la forma usuario@servidor.extension">
+                    <div th:errors="*{email}" class="error"></div>
+        <br>
+            <label for="url" th:text="#{etiqueta_url}"></label>
+                <input tabindex="11" type="text" th:field="*{url}" placeholder="Introduce una URL">
+                    <div  th:errors="*{url}" class="error"></div>
+    </fieldset>
+<br>
+    <fieldset>
+        <legend th:text="#{otraInformacion}"></legend>
+            <label class="especial" for="archivosSel" th:text="#{etiqueta_archivosSel}"></label>
+                <input tabindex="12" type="file" th:field="*{archivosSel}" multiple="multiple">
+                    <div th:errors="*{archivosSel}" class="error"></div>
+        <br>
+            <label for="musicas" th:text="#{etiqueta_musicas}"></label>
+                <select tabindex="13" multiple="multiple" th:field="*{musicas}" size="3">
+                    <option th:each="musica: ${musicas}"
+                    th:value="${musica.key}"
+                    th:text="${musica.value}"></option>
+                </select>
+                    <div th:errors="*{musicas}" class="error"></div>
+        <br>
+            <label for="desSeleccionarID"></label>
+                <input type="button" id="desSeleccionarID" value="Desseleccionar" onclick="
+                let selMusica = document.getElementById('musicas');
+                for (let i = 0; i < selMusica.options.length; i++) {
+                    selMusica.options[i].selected = false;
+                }">
+            <label for="seleccionarID"></label>
+                <input type="button" id="seleccionarID" value="Seleccionar" onclick="
+                let selMusica = document.getElementById('musicas');
+                for (let i = 0; i < selMusica.options.length; i++) {
+                    selMusica.options[i].selected = true;
+                }">
+        <br>
+                <label for="aficiones" th:text="#{etiqueta_aficiones}"></label>
+                <label th:each="aficion: ${aficiones}">
+                    <th:block th:text="${aficion.value}"/>
+                    <input tabindex="14" type="checkbox"
+                        th:value="${aficion.key}"
+                        th:field="*{aficiones}"/>
+                </label>
+                    <div th:errors="*{aficiones}" class="error"></div>
+           <!-- <label for="aficionesSelID1">Deporte</label>
+                <input tabindex="14" type="checkbox" name="chck" id="aficionesSelID1" value="D" checked="checked">
+            <label for="aficionesSelID2">Programacion</label>
+                <input tabindex="15" type="checkbox" name="chck" id="aficionesSelID2" value="D" checked="checked">
+            <label for="aficionesSelID3">Velatorios</label>
+                <input tabindex="16" type="checkbox" name="chck" id="aficionesSelID3" value="V" checked="checked">
+            <label for="aficionesSelID4">Libros</label>
+                <input tabindex="17" type="checkbox" name="chck" id="aficionesSelID4" value="L">-->
+        <br>
+                <input type="button" value="Desseleccionar" onclick="
+                for (let i=0; i< document.getElementsByName('aficiones').length;i++){
+                    document.getElementsByName('aficiones')[i].checked=false;
+                }
+                ">
+                <input type="button" value="Seleccionar" onclick="
+                 for (let i=0; i< document.getElementsByName('aficiones').length;i++){
+                    document.getElementsByName('aficiones')[i].checked=true;
+                }
+                ">
+        <br>
+            <label for="comentarios" th:text="#{etiqueta_comentarios}"></label>
+                <textarea tabindex="15" th:field="*{comentarios}" cols="30" rows="5"></textarea>
+                    <div th:errors="*{comentarios}" class="error"></div>
+        <br>
+    </fieldset>
+<br>
+    <fieldset>
+        <legend th:text="#{opcionesFormulario}"></legend>
+            <label for="licenciaID" th:text="#{etiqueta_aceptaLicencia}"></label>
+                <input tabindex="16" type="checkbox" th:field="*{aceptaLicencia}">
+                    <div th:errors="*{aceptaLicencia}" class="error"></div>
+        <br>
+                <input type="button" value="Vaciar" onclick="
+                for (let i=0; i< document.getElementsByName('aficiones').length;i++){
+                    document.getElementsByName('aficiones')[i].checked=false;
+                }
+                let generoRadio = document.getElementsByName('generoSeleccionado');
+                for (let i = 0; i < generoRadio.length; i++) {
+                    generoRadio[i].checked = false;
+                }
+                let selMusica = document.getElementById('musicas');
+                for (let i = 0; i < selMusica.options.length; i++) {
+                    selMusica.options[i].selected = false;
+                }
+                vaciarNombres();
+                ">
+                <input type="reset" value="Reseteo">
+                <input type="submit" value="Enviar">
+    </fieldset>
+</form>
+<link rel="stylesheet" th:href="@{/css/form.css}">
+<script src="/js/funciones.js"></script>
